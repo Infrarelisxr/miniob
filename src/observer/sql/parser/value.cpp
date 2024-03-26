@@ -45,7 +45,7 @@ Value::Value(const char *date,int len,int flag)
 { 
   std::string str(date);
   std::string token;
-  srd::istringstream tokenStream(str);
+  std::istringstream tokenStream(str);
   std::string year,month,day;
   std::getline(tokenStream,token,'-');
   year = token;
