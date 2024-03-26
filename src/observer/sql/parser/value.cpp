@@ -344,7 +344,7 @@ bool Value::get_boolean() const
     case INTS: {
       return num_value_.int_value_ != 0;
     } break;
-    case INTS: {
+    case DATES: {
       return num_value_.date_value_ != 0;
     } break;
     case FLOATS: {
