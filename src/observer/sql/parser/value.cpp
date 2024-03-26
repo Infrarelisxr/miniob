@@ -20,7 +20,7 @@ See the Mulan PSL v2 for more details. */
 #include <string>
 #include <iostream>
 
-const char *ATTR_TYPE_NAME[] = {"undefined", "chars", "ints", "floats", "booleans"};
+const char *ATTR_TYPE_NAME[] = {"undefined", "chars", "ints", "dates", "floats", "booleans"};
 
 const char *attr_type_to_string(AttrType type)
 {
