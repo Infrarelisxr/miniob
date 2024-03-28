@@ -273,17 +273,33 @@ int Value::get_int() const
   }
   return 0;
 }
-
+int DateToInt(std::string str)
+{
+  std::string token;
+  std::istringstream tokenStream(str);
+  std::string year,month,day;
+  std::getline(tokenStream,token,'-');
+  year = token;
+  std::getline(tokenStream,token,'-');
+  if (token.size() == 1) {
+    month = "0" + token;
+  } else {
+    month = token;
+  }
+  std::getline(tokenStream,token,'-');
+  if (token.size() == 1) {
+    day = "0" + token;
+  } else {
+    day = token;
+  }
+  int val = std::stoi(year + month + day);
+  return val;
+}
 int Value::get_date() const
 {
   switch (attr_type_) {
     case CHARS: {
-      try {
-        return (int)(std::stol(str_value_));
-      } catch (std::exception const &ex) {
-        LOG_TRACE("failed to convert string to number. s=%s, ex=%s", str_value_.c_str(), ex.what());
-        return 0;
-      }
+      return DateToInt(str_value_);
     }
     case INTS: {
       return num_value_.int_value_;

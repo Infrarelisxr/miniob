@@ -85,13 +85,48 @@ RC FilterStmt::create_filter_unit(Db *db, Table *default_table, std::unordered_m
 
   CompOp comp = condition.comp;
   if (comp < EQUAL_TO || comp >= NO_OP) {
-    LOG_WARN("invalid compare operator : %d", comp);
+    LOG_WARN("invalid compare operator : %d", comp); //无效比较符
     return RC::INVALID_ARGUMENT;
   }
 
   filter_unit = new FilterUnit;
 
-  if (condition.left_is_attr) {
+  if (condition.left_is_attr) {  //如果左侧是属性
+    if(condition.left_value.attr_type()==DATES) //如果是date类型，看是否合法
+    {
+      if(!condition.right_is_attr)  //右侧是值，需要判断一下这个值是否合法
+      {
+        int val = condition.right_value.get_date();
+        if(val<19700101||val>20380131)
+        {
+          return RC::SCHEMA_FIELD_TYPE_MISMATCH;
+        }
+        int year = val/10000;
+        int month = (val/100)%100;
+        int day = val%100;
+        if(month<1||month>12||day<1)
+        {
+          return RC::SCHEMA_FIELD_TYPE_MISMATCH;
+        }
+        const int Day_Of_Month[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
+        bool check = (year%400==0||(year%100 && year%4==0)); //闰年
+        if(!check&&day>Day_Of_Month[month]) //不是闰年
+        {
+          return RC::SCHEMA_FIELD_TYPE_MISMATCH;
+        }
+        if(check) //是闰年
+        {
+          if(month==2&&day>29)
+          {
+            return RC::SCHEMA_FIELD_TYPE_MISMATCH;
+          }
+          if(month!=2&&day>Day_Of_Month[month])
+          {
+            return RC::SCHEMA_FIELD_TYPE_MISMATCH;
+          }
+        }
+      }
+    }
     Table           *table = nullptr;
     const FieldMeta *field = nullptr;
     rc                     = get_table_and_field(db, default_table, tables, condition.left_attr, table, field);
