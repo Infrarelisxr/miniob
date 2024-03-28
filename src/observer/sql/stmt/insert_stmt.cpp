@@ -58,6 +58,38 @@ RC InsertStmt::create(Db *db, const InsertSqlNode &inserts, Stmt *&stmt)
           table_name, field_meta->name(), field_type, value_type);
       return RC::SCHEMA_FIELD_TYPE_MISMATCH;
     }
+    if(field_type == DATES)
+    {
+      int val = values[i].get_date();
+      if(val<19700101||val>20380131)
+      {
+        return RC::SCHEMA_FIELD_TYPE_MISMATCH;
+      }
+      int year = val/10000;
+      int month = (val/100)%100;
+      int day = val%100;
+      if(month<1||month>12||day<1)
+      {
+        return RC::SCHEMA_FIELD_TYPE_MISMATCH;
+      }
+      const int Day_Of_Month[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
+      bool check = (year%400==0||(year%100 && year%4==0)); //闰年
+      if(!check&&day>Day_Of_Month[month]) //不是闰年
+      {
+        return RC::SCHEMA_FIELD_TYPE_MISMATCH;
+      }
+      if(check) //是闰年
+      {
+        if(month==2&&day>29)
+        {
+          return RC::SCHEMA_FIELD_TYPE_MISMATCH;
+        }
+        if(month!=2&&day>Day_Of_Month[month])
+        {
+          return RC::SCHEMA_FIELD_TYPE_MISMATCH;
+        }
+      }
+    }
   }
 
   // everything alright
