@@ -50,9 +50,17 @@ Value::Value(const char *date,int len,int flag)
   std::getline(tokenStream,token,'-');
   year = token;
   std::getline(tokenStream,token,'-');
-  month = token;
+  if (token.size() == 1) {
+    month = "0" + token;
+  } else {
+    month = token;
+  }
   std::getline(tokenStream,token,'-');
-  day = token;
+  if (token.size() == 1) {
+    day = "0" + token;
+  } else {
+    day = token;
+  }
   int val = std::stoi(year + month + day);
   set_date(val); 
 }
@@ -161,7 +169,17 @@ const char *Value::data() const
     } break;
   }
 }
+std::string intToDate(int val) {
+    std::string valStr = std::to_string(val);
 
+    std::string year = valStr.substr(0, 4);
+    std::string month = valStr.substr(4, 2);
+    std::string day = valStr.substr(6, 2);
+
+    std::string dateStr = year + "-" + month + "-" + day;
+
+    return dateStr;
+}
 std::string Value::to_string() const
 {
   std::stringstream os;
@@ -170,7 +188,7 @@ std::string Value::to_string() const
       os << num_value_.int_value_;
     } break;
     case DATES: {
-      os << num_value_.date_value_;
+      os << intToDate(num_value_.date_value_);
     } break;
     case FLOATS: {
       os << common::double_to_str(num_value_.float_value_);
