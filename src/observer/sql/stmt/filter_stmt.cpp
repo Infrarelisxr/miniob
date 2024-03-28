@@ -94,7 +94,7 @@ RC FilterStmt::create_filter_unit(Db *db, Table *default_table, std::unordered_m
   if (condition.left_is_attr) {  //如果左侧是属性
     if(condition.left_value.attr_type()==DATES) //如果是date类型，看是否合法
     {
-      if(!condition.right_is_attr)  //右侧是值，需要判断一下这个值是否合法
+      if(condition.right_is_attr==0)  //右侧是值，需要判断一下这个值是否合法
       {
         int val = condition.right_value.get_date();
         if(val<19700101||val>20380131)
