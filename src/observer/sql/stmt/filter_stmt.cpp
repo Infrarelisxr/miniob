@@ -92,38 +92,7 @@ RC FilterStmt::create_filter_unit(Db *db, Table *default_table, std::unordered_m
   filter_unit = new FilterUnit;
 
   if (condition.left_is_attr) {  //如果左侧是属性
-    if(condition.left_value.attr_type()==DATES) //如果是date类型，看是否合法
-    {
-        int val = condition.right_value.get_date();
-        if(val<19700101||val>20380131)
-        {
-          return RC::INVALID_ARGUMENT;
-        }
-        int year = val/10000;
-        int month = (val/100)%100;
-        int day = val%100;
-        if(month<1||month>12||day<1)
-        {
-          return RC::INVALID_ARGUMENT;
-        }
-        const int Day_Of_Month[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
-        bool check = (year%400==0||(year%100 && year%4==0)); //闰年
-        if(!check&&day>Day_Of_Month[month]) //不是闰年
-        {
-          return RC::INVALID_ARGUMENT;
-        }
-        if(check) //是闰年
-        {
-          if(month==2&&day>29)
-          {
-            return RC::INVALID_ARGUMENT;
-          }
-          if(month!=2&&day>Day_Of_Month[month])
-          {
-            return RC::INVALID_ARGUMENT;
-          }
-        }
-    }
+
     Table           *table = nullptr;
     const FieldMeta *field = nullptr;
     rc                     = get_table_and_field(db, default_table, tables, condition.left_attr, table, field);
@@ -140,10 +109,25 @@ RC FilterStmt::create_filter_unit(Db *db, Table *default_table, std::unordered_m
     filter_unit->set_left(filter_obj);
   }
 
-
-
   if (condition.right_is_attr) {
-    if(condition.right_value.attr_type()==DATES) //如果是date类型，看是否合法
+
+    Table           *table = nullptr;
+    const FieldMeta *field = nullptr;
+    rc                     = get_table_and_field(db, default_table, tables, condition.right_attr, table, field);
+    if (rc != RC::SUCCESS) {
+      LOG_WARN("cannot find attr");
+      return rc;
+    }
+    FilterObj filter_obj;
+    filter_obj.init_attr(Field(table, field));
+    filter_unit->set_right(filter_obj);
+  } else {
+    FilterObj filter_obj;
+    filter_obj.init_value(condition.right_value);
+    filter_unit->set_right(filter_obj);
+  }
+
+    if(condition.left_value.attr_type()==DATES) //如果是date类型，看是否合法
     {
         int val = condition.left_value.get_date();
         if(val<19700101||val>20380131)
@@ -175,21 +159,39 @@ RC FilterStmt::create_filter_unit(Db *db, Table *default_table, std::unordered_m
           }
         }
     }
-    Table           *table = nullptr;
-    const FieldMeta *field = nullptr;
-    rc                     = get_table_and_field(db, default_table, tables, condition.right_attr, table, field);
-    if (rc != RC::SUCCESS) {
-      LOG_WARN("cannot find attr");
-      return rc;
+
+    if(condition.right_value.attr_type()==DATES) //如果是date类型，看是否合法
+    {
+        int val = condition.right_value.get_date();
+        if(val<19700101||val>20380131)
+        {
+          return RC::INVALID_ARGUMENT;
+        }
+        int year = val/10000;
+        int month = (val/100)%100;
+        int day = val%100;
+        if(month<1||month>12||day<1)
+        {
+          return RC::INVALID_ARGUMENT;
+        }
+        const int Day_Of_Month[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
+        bool check = (year%400==0||(year%100 && year%4==0)); //闰年
+        if(!check&&day>Day_Of_Month[month]) //不是闰年
+        {
+          return RC::INVALID_ARGUMENT;
+        }
+        if(check) //是闰年
+        {
+          if(month==2&&day>29)
+          {
+            return RC::INVALID_ARGUMENT;
+          }
+          if(month!=2&&day>Day_Of_Month[month])
+          {
+            return RC::INVALID_ARGUMENT;
+          }
+        }
     }
-    FilterObj filter_obj;
-    filter_obj.init_attr(Field(table, field));
-    filter_unit->set_right(filter_obj);
-  } else {
-    FilterObj filter_obj;
-    filter_obj.init_value(condition.right_value);
-    filter_unit->set_right(filter_obj);
-  }
 
   filter_unit->set_comp(comp);
 
