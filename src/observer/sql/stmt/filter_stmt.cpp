@@ -94,7 +94,7 @@ RC FilterStmt::create_filter_unit(Db *db, Table *default_table, std::unordered_m
   if (condition.left_is_attr) {  //如果左侧是属性
     if(condition.left_value.attr_type()==DATES) //如果是date类型，看是否合法
     {
-        int val = condition.left_value.get_date();
+        int val = condition.right_value.get_date();
         if(val<19700101||val>20380131)
         {
           return RC::INVALID_ARGUMENT;
@@ -145,7 +145,7 @@ RC FilterStmt::create_filter_unit(Db *db, Table *default_table, std::unordered_m
   if (condition.right_is_attr) {
     if(condition.right_value.attr_type()==DATES) //如果是date类型，看是否合法
     {
-        int val = condition.right_value.get_date();
+        int val = condition.left_value.get_date();
         if(val<19700101||val>20380131)
         {
           return RC::INVALID_ARGUMENT;
