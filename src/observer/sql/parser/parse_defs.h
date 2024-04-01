@@ -37,7 +37,14 @@ struct RelAttrSqlNode
 {
   std::string relation_name;   ///< relation name (may be NULL) 表名
   std::string attribute_name;  ///< attribute name              属性名
+  AggrOp      aggregation = AGGR_NONE;   //< aggregation(may be empty)  聚合操作
 };
+
+enum AggrOp
+{
+  AGGR_SUM,
+  AGGR_NONE
+}
 
 /**
  * @brief 描述比较运算符
