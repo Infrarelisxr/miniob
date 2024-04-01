@@ -38,7 +38,7 @@ enum AggrOp
 {
   AGGR_SUM,
   AGGR_NONE
-}
+};
 
 struct RelAttrSqlNode
 {

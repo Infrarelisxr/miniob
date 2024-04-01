@@ -521,7 +521,9 @@ select_attr:
     ;
 
 aggr_op:
-    SUM_F { $$ = AGGR_SUM; }
+    SUM_F { 
+      $$ = new AggrOp;
+      $$ = AGGR_SUM; }
     ;
 
 rel_attr:
@@ -537,7 +539,8 @@ rel_attr:
       free($1);
       free($3);
     }
-    | aggr_op LBRACE rel_attr RBRACE{
+    | aggr_op LBRACE rel_attr RBRACE {
+      $$ = new RelAttrSqlNode;
       $$ = $3;
       $$->aggregation = $1;
     }
