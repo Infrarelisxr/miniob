@@ -33,6 +33,13 @@ class Expression;
  * Rel -> Relation
  * Attr -> Attribute
  */
+
+enum AggrOp
+{
+  AGGR_SUM,
+  AGGR_NONE
+}
+
 struct RelAttrSqlNode
 {
   std::string relation_name;   ///< relation name (may be NULL) 表名
@@ -40,11 +47,7 @@ struct RelAttrSqlNode
   AggrOp      aggregation = AGGR_NONE;   //< aggregation(may be empty)  聚合操作
 };
 
-enum AggrOp
-{
-  AGGR_SUM,
-  AGGR_NONE
-}
+
 
 /**
  * @brief 描述比较运算符
