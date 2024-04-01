@@ -133,6 +133,7 @@ ArithmeticExpr *create_arithmetic_expression(ArithmeticExpr::Type type,
 %type <value>               value
 %type <number>              number
 %type <comp>                comp_op
+%type <aggr_op>             aggr_op
 %type <rel_attr>            rel_attr
 %type <attr_infos>          attr_def_list
 %type <attr_info>           attr_def
@@ -521,9 +522,7 @@ select_attr:
     ;
 
 aggr_op:
-    SUM_F { 
-      $$ = new AggrOp;
-      $$ = AGGR_SUM; }
+    SUM_F { $$ = AGGR_SUM; }
     ;
 
 rel_attr:
@@ -540,7 +539,6 @@ rel_attr:
       free($3);
     }
     | aggr_op LBRACE rel_attr RBRACE {
-      $$ = new RelAttrSqlNode;
       $$ = $3;
       $$->aggregation = $1;
     }
