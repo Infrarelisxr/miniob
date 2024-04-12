@@ -1,0 +1,10 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\observer",
+    "\\observer\\sql",
+    "\\observer\\sql\\optimizer"
+  ],
+  "SelectedNode": "\\observer\\sql\\optimizer\\physical_plan_generator.cpp",
+  "PreviewInSolutionExplorer": false
+}
