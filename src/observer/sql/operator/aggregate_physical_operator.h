@@ -15,7 +15,10 @@ class AggregatePhysicalOperator : public PhysicalOperator
 
     virtual ~AggregatePhysicalOperator() = default;
 
-    void add_aggregation(const AggrOp aggregation);
+    void add_aggregation(const AggrOp aggregation)
+    {
+        aggregations_.push_back(aggregation);
+    }
 
     PhysicalOperatorType type() const override
     {

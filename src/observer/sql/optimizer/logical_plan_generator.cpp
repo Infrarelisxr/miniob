@@ -138,7 +138,7 @@ RC LogicalPlanGenerator::create_plan(SelectStmt *select_stmt, unique_ptr<Logical
 
   if(aggr_flag)
   {
-    unique_ptr<LogicalOperator> aggregate_oper(new AggrgateLogicalOperator(all_fields));
+    unique_ptr<LogicalOperator> aggregate_oper(new AggregateLogicalOperator(all_fields));
     aggregate_oper->add_child(std::move(project_oper));
     logical_operator.swap(aggregate_oper);
   }else{
