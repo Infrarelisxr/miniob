@@ -76,6 +76,10 @@ RC PhysicalPlanGenerator::create(LogicalOperator &logical_operator, unique_ptr<P
       return create_plan(static_cast<JoinLogicalOperator &>(logical_operator), oper);
     } break;
 
+    case LogicalOperatorType::AGGREGATE: {
+      return create_plan(static_cast<AggregateLogicalOperator &>(logical_operator), oper);
+    } break;
+
     default: {
       return RC::INVALID_ARGUMENT;
     }
