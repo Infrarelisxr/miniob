@@ -34,4 +34,4 @@ class AggregatePhysicalOperator : public PhysicalOperator
 private:
     std::vector<AggrOp> aggregations_;
     ValueListTuple result_tuple_;
-}
+};

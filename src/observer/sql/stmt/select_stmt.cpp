@@ -27,7 +27,7 @@ SelectStmt::~SelectStmt()
   }
 }
 
-static void wildcard_fields(Table *table, std::vector<Field> &field_metas)
+static void wildcard_fields(Table *table, std::vector<Field> &field_metas,AggrOp aggregation=AggrOp::AGGR_NONE)
 {
   const TableMeta &table_meta = table->table_meta();
   const int        field_num  = table_meta.field_num();
@@ -67,11 +67,19 @@ RC SelectStmt::create(Db *db, const SelectSqlNode &select_sql, Stmt *&stmt)
   std::vector<Field> query_fields;
   for (int i = static_cast<int>(select_sql.attributes.size()) - 1; i >= 0; i--) {
     const RelAttrSqlNode &relation_attr = select_sql.attributes[i];
+    const AggrOp &aggr=relation_attr.aggregation;
 
+    if(relation_attr.valid==false)
+    {
+      return RC::INVALID_ARGUMENT;
+    }
     if (common::is_blank(relation_attr.relation_name.c_str()) &&
         0 == strcmp(relation_attr.attribute_name.c_str(), "*")) {
+      if(aggr!=AggrOp::AGGR_COUNT && aggr != AggrOp::AGGR_NONE){
+        return RC::INVALID_ARGUMENT;
+      }
       for (Table *table : tables) {
-        wildcard_fields(table, query_fields);
+        wildcard_fields(table, query_fields,aggr);
       }
 
     } else if (!common::is_blank(relation_attr.relation_name.c_str())) {
@@ -95,15 +103,18 @@ RC SelectStmt::create(Db *db, const SelectSqlNode &select_sql, Stmt *&stmt)
 
         Table *table = iter->second;
         if (0 == strcmp(field_name, "*")) {
-          wildcard_fields(table, query_fields);
+                     if(relation_attr.aggregation != AggrOp::AGGR_NONE && relation_attr.aggregation != AggrOp::AGGR_COUNT){
+            return RC::INVALID_ARGUMENT;
+          }
+          wildcard_fields(table, query_fields,aggr);
         } else {
           const FieldMeta *field_meta = table->table_meta().field(field_name);
           if (nullptr == field_meta) {
             LOG_WARN("no such field. field=%s.%s.%s", db->name(), table->name(), field_name);
             return RC::SCHEMA_FIELD_MISSING;
           }
-
-          query_fields.push_back(Field(table, field_meta));
+          const AggrOp aggregation_ =  relation_attr.aggregation;
+          query_fields.push_back(Field(table, field_meta,aggregation_));
         }
       }
     } else {

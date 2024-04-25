@@ -5,19 +5,11 @@
 
 RC AggregatePhysicalOperator::open(Trx *trx)
 {
-  if (children_.empty()) {
-    return RC::SUCCESS;
+  if (children_.size()!=1) {
+    LOG_WARN("aggregate operator should contain only one child");
+    return RC::INTERNAL;
   }
-
-  std::unique_ptr<PhysicalOperator> &child = children_[0];
-  RC                                 rc    = child->open(trx);
-  if (rc != RC::SUCCESS) {
-    LOG_WARN("failed to open child operator: %s", strrc(rc));
-    return rc;
-  }
-
-
-  return RC::SUCCESS;
+  return children_[0]->open(trx);
 }
 
 RC AggregatePhysicalOperator::next()
@@ -43,14 +35,14 @@ RC AggregatePhysicalOperator::next()
         AttrType attr_type = AttrType::INTS;
         switch (aggregation)
         {
-        case AggrOp::AGGR_SUM:
+            case AggrOp::AGGR_SUM:
             rc = tuple->cell_at(cell_idx, cell);
             attr_type = cell.attr_type();
             if(attr_type == AttrType::INTS or attr_type == AttrType::FLOATS) {
                 result_cells[cell_idx].set_float(result_cells[cell_idx].get_float() + cell.get_float());
             }
             break;
-        default:
+            default:
             return RC::UNIMPLENMENT;
         }
     }
