@@ -599,6 +599,10 @@ rel_attr:
       $$->aggregation = $1;
       $$->valid = false;
     }
+    | aggr_op LBRACE rel_attr RBRACE{
+      $$ = $3;
+      $$->aggregation = $1;
+    }
     ;
 
 attr_list:

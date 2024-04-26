@@ -3,7 +3,7 @@
 #include "sql/operator/physical_operator.h"
 #include "sql/parser/parse.h"
 #include "sql/expr/tuple.h"
-
+#include <vector>
 /**
  * @brief 聚合物理算子
  * @ingroup PhysicalOperator

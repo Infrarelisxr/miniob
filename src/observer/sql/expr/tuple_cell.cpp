@@ -93,6 +93,18 @@ void TupleCellSpec::aggr_to_string (const AggrOp aggr,std::string& aggr_expr)
   case AggrOp::AGGR_SUM :
     aggr_expr = "SUM";
     break;
+    case AggrOp::AGGR_AVG :
+    aggr_expr = "AVG";
+    break;
+  case AggrOp::AGGR_MAX :
+    aggr_expr = "MAX";
+    break;
+  case AggrOp::AGGR_MIN :
+    aggr_expr = "MIN";
+    break;
+  case AggrOp::AGGR_COUNT :
+    aggr_expr = "COUNT";
+    break;
   default:
     break;
   }
