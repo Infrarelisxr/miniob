@@ -556,22 +556,6 @@ rel_attr_aggr:
   }
   ;
 
-rel_attr_aggr_list:
-/* empty */
-    {
-      $$ = nullptr;
-    }
-    | COMMA rel_attr_aggr rel_attr_aggr_list {
-      if ($3 != nullptr) {
-        $$ = $3;
-      } else {
-        $$ = new std::vector<RelAttrSqlNode>;
-      }
-
-      $$->emplace_back(*$2);
-      delete $2;
-  }
-  ;
 rel_attr:
     ID {
       $$ = new RelAttrSqlNode;
@@ -605,6 +589,22 @@ rel_attr:
     }
     ;
 
+rel_attr_aggr_list:
+/* empty */
+    {
+      $$ = nullptr;
+    }
+    | COMMA rel_attr_aggr rel_attr_aggr_list {
+      if ($3 != nullptr) {
+        $$ = $3;
+      } else {
+        $$ = new std::vector<RelAttrSqlNode>;
+      }
+
+      $$->emplace_back(*$2);
+      delete $2;
+  }
+  ;
 attr_list:
     /* empty */
     {

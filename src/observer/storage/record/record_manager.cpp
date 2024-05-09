@@ -261,6 +261,11 @@ RC RecordPageHandler::delete_record(const RID *rid)
   }
 }
 
+RC RecordPageHandler::update_record(const char *data, RID *rid){
+  Bitmap bitmap(bitmap_, page_header_->record_capacity);
+  return RC::SUCCESS;
+}
+
 RC RecordPageHandler::get_record(const RID *rid, Record *rec)
 {
   if (rid->slot_num >= page_header_->record_capacity) {

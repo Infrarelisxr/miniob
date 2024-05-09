@@ -60,7 +60,8 @@ TupleCellSpec::TupleCellSpec(const char *table_name, const char * field_name, co
       alias_ = table_name_ + "." + field_name_;
     }
 
-    if(aggr_ == AggrOp::AGGR_COUNT_ALL) {
+    if(aggr_ == AggrOp::AGGR_COUNT_ALL) 
+    {
       alias_ = "COUNT(*)";
     } else if (aggr_ != AggrOp::AGGR_NONE) {
       std::string aggr_repr;
@@ -93,7 +94,7 @@ void TupleCellSpec::aggr_to_string (const AggrOp aggr,std::string& aggr_expr)
   case AggrOp::AGGR_SUM :
     aggr_expr = "SUM";
     break;
-    case AggrOp::AGGR_AVG :
+  case AggrOp::AGGR_AVG :
     aggr_expr = "AVG";
     break;
   case AggrOp::AGGR_MAX :

@@ -107,7 +107,8 @@ RC SelectStmt::create(Db *db, const SelectSqlNode &select_sql, Stmt *&stmt)
 
         Table *table = iter->second;
         if (0 == strcmp(field_name, "*")) {
-            if(relation_attr.aggregation != AggrOp::AGGR_NONE && relation_attr.aggregation != AggrOp::AGGR_COUNT){
+            if(relation_attr.aggregation != AggrOp::AGGR_NONE && relation_attr.aggregation != AggrOp::AGGR_COUNT)
+          {
             return RC::INVALID_ARGUMENT;
           }
           wildcard_fields(table, query_fields,aggr);
