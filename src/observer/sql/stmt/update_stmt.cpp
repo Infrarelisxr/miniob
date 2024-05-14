@@ -50,7 +50,7 @@ RC UpdateStmt::create(Db *db, const UpdateSqlNode &update_sql, Stmt *&stmt)
   const FieldMeta *field_meta = table->table_meta().field(update_sql.attribute_name.c_str());
   if(nullptr == field_meta)
   {
-    LOG_WARN("no such field. field=%s.%s.%s", db->name(), update_sql.attribute_name.);
+    LOG_WARN("no such field. field=%s.%s.%s", db->name(), table->name(), update_sql.attribute_name.c_str());
     return RC::SCHEMA_FIELD_MISSING;
   }
 

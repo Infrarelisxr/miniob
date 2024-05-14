@@ -172,9 +172,10 @@ public:
    * @param data 要插入的数据行
    * @param rid  插入的位置
    */
+  
   RC recover_insert_record(const char *data, const RID &rid);
 
-  RC update_record(const char *data, RID *rid);
+  RC update_record(RID *rid, int offset, int len, Value &value);
   /**
    * @brief 删除指定的记录
    *
@@ -188,7 +189,7 @@ public:
    * @param rid 指定的位置
    * @param rec 返回指定的数据。这里不会将数据复制出来，而是使用指针，所以调用者必须保证数据使用期间受到保护
    */
-  RC get_record(const RID *rid, Record *rec);
+  RC get_record(const RID *rid, int offset, int len, Value &value);
 
   /**
    * @brief 返回该记录页的页号
@@ -276,6 +277,8 @@ public:
    * @param rid         返回该记录的标识符
    */
   RC insert_record(const char *data, int record_size, RID *rid);
+
+  RC update_record(RID *rid, int offset, int len, Value &value);
 
   /**
    * @brief 数据库恢复时，在指定文件指定位置插入数据

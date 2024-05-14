@@ -18,8 +18,10 @@ See the Mulan PSL v2 for more details. */
 #include "sql/stmt/stmt.h"
 #include "storage/field/field.h"
 #include "sql/stmt/filter_stmt.h"
+#include "storage/db/db.h"
 
 class Table;
+class Db;
 
 /**
  * @brief 更新语句
@@ -30,7 +32,9 @@ class UpdateStmt : public Stmt
 public:
   UpdateStmt() = default;
   UpdateStmt(Table *table, Field field, Value value, FilterStmt *filter_stmt);
-
+  StmtType type() const override{
+    return StmtType::UPDATE;
+  }
 public:
   static RC create(Db *db, const UpdateSqlNode &update_sql, Stmt *&stmt);
 
