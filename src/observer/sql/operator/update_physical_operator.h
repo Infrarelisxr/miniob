@@ -4,7 +4,9 @@
 #include "sql/parser/parse.h"
 #include <vector>
 
+
 class UpdateStmt;
+class Trx;
 
 class UpdatePhysicalOperator : public PhysicalOperator
 {
@@ -15,7 +17,7 @@ public:
 
   PhysicalOperatorType type() const override
   {
-    return PhysicalOperatorType::INSERT;
+    return PhysicalOperatorType::UPDATE;
   }
 
   RC open(Trx *trx) override;

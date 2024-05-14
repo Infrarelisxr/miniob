@@ -4,6 +4,7 @@
 
 #include "sql/operator/logical_operator.h"
 #include "sql/parser/parse_defs.h"
+#include "storage/field/field.h"
 
 class UpdateLogicalOperator : public LogicalOperator
 {

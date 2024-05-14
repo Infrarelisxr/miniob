@@ -3,11 +3,9 @@
 #include "storage/trx/trx.h"
 #include "sql/operator/update_physical_operator.h"
 #include "sql/stmt/insert_stmt.h"
+#include "storage/record/record.h"
 
 using namespace std;
-std::vector<Record> insert_records;
-std::vector<Record> delete_records;
-
 
 UpdatePhysicalOperator::UpdatePhysicalOperator(Table *table, Field field, Value value)
     : table_(table), field_(field), value_(value)

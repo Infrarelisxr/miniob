@@ -215,6 +215,7 @@ RC Table::update_record(Record &record, int offset, int len, Value &value){
 
   return RC::SUCCESS;
 }
+
 RC Table::visit_record(const RID &rid, bool readonly, std::function<void(Record &)> visitor)
 {
   return record_handler_->visit_record(rid, readonly, visitor);

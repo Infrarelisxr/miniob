@@ -145,7 +145,9 @@ RC MvccTrx::insert_record(Table *table, Record &record)
   }
   return rc;
 }
-
+RC MvccTrx::update_record(Table *table, Record &record,int offset,int len,Value &value) {
+  return RC::INVALID_ARGUMENT;
+}
 RC MvccTrx::delete_record(Table *table, Record &record)
 {
   Field begin_field;
