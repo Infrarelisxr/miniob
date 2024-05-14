@@ -189,7 +189,7 @@ public:
    * @param rid 指定的位置
    * @param rec 返回指定的数据。这里不会将数据复制出来，而是使用指针，所以调用者必须保证数据使用期间受到保护
    */
-  RC get_record(const RID *rid, int offset, int len, Value &value);
+  RC get_record(const RID *rid, Record *rec);
 
   /**
    * @brief 返回该记录页的页号
