@@ -53,7 +53,10 @@ RC UpdateStmt::create(Db *db, const UpdateSqlNode &update_sql, Stmt *&stmt)
     LOG_WARN("no such field. field=%s.%s.%s", db->name(), table->name(), update_sql.attribute_name.c_str());
     return RC::SCHEMA_FIELD_MISSING;
   }
-
+  if(field_meta->type()!=update_sql.value.attr_type())
+  {
+    return RC::INVALID_ARGUMENT;
+  }
   //过滤算子
   std::unordered_map<std::string, Table *> table_map;
   table_map.insert(std::pair<std::string, Table *>(table_name, table));
