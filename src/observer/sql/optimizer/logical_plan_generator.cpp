@@ -250,22 +250,23 @@ RC LogicalPlanGenerator::create_plan(UpdateStmt *update_stmt, unique_ptr<Logical
 
   //首先创建select和filter算子
   std::vector<Field> fields;
-  fields.emplace_back(update_stmt->field());
+  auto temp_field = update_stmt->field();
+  fields.push_back(Field(table, &temp_field))
   unique_ptr<LogicalOperator> table_get_oper(new TableGetLogicalOperator(table, fields, false));
 
   //过滤算子
-  unique_ptr<LogicalOperator> filter_oper;
+  unique_ptr<LogicalOperator> predicate_oper;
   FilterStmt *filter_stmt = update_stmt->filter_stmt();
-  RC rc = create_plan(filter_stmt, filter_oper);
+  RC rc = create_plan(filter_stmt, predicate_oper);
   if(rc != RC::SUCCESS){
     return rc;
   }
 
-  unique_ptr<LogicalOperator> update_oper(new UpdateLogicalOperator(table, update_stmt->field(), update_stmt->value()));
+  unique_ptr<LogicalOperator> update_oper(new UpdateLogicalOperator(table, update_stmt->field(), *(update_stmt->value())));
 
-  if(filter_oper){
-    filter_oper->add_child(std::move(table_get_oper));
-    update_oper->add_child(std::move(filter_oper));
+  if(predicate_oper){
+    predicate_oper->add_child(std::move(table_get_oper));
+    update_oper->add_child(std::move(predicate_oper));
   }else{
     update_oper->add_child(std::move(table_get_oper));
   }

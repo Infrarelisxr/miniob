@@ -51,11 +51,10 @@ RC UpdatePhysicalOperator::next()
 
 
     //获取fieldmeta的偏移量及长度，确定更新的位置和范围
-    const char* field_name = field_.field_name();
-    const FieldMeta *field_meta = table_->table_meta().field(field_name);
+    const char* field_name = field_.name();
 
-    int offset_ = field_meta->offset();
-    int len_ = field_meta->len();
+    int offset_ = field_.offset();
+    int len_ = field_.len();
 
     rc = trx_->update_record(table_, record, offset_, len_, value_);
 

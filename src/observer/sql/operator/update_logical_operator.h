@@ -9,7 +9,7 @@
 class UpdateLogicalOperator : public LogicalOperator
 {
 public:
-    UpdateLogicalOperator(Table *table, Field field, Value value);
+    UpdateLogicalOperator(Table *table, FieldMeta field, Value value);
     virtual ~UpdateLogicalOperator() = default;
 
     LogicalOperatorType type() const override
@@ -18,12 +18,12 @@ public:
     }
 
     Table *table() const { return table_; }
-    const Field field() const { return field_; }
+    const FieldMeta field() const { return field_; }
     const Value value() const { return value_; }
 
 
 private:
     Table *table_ = nullptr;
-    Field field_;
+    FieldMeta field_;
     Value value_;
 };

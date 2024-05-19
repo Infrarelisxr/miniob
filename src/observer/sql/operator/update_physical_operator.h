@@ -11,7 +11,7 @@ class Trx;
 class UpdatePhysicalOperator : public PhysicalOperator
 {
 public:
-  UpdatePhysicalOperator(Table *table, Field field, Value value);
+  UpdatePhysicalOperator(Table *table, FieldMeta field, Value value);
 
   virtual ~UpdatePhysicalOperator() = default;
 
@@ -28,7 +28,7 @@ public:
 
 private:
   Table *table_ = nullptr;
-  Field field_;
+  FieldMeta field_;
   Value value_;
   Trx *trx_ = nullptr;
 };

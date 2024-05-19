@@ -33,7 +33,7 @@ class UpdateStmt : public Stmt
 {
 public:
   UpdateStmt() = default;
-  UpdateStmt(Table *table, Field field, Value value, FilterStmt *filter_stmt);
+  UpdateStmt(Table *table, FieldMeta field, Value *value, FilterStmt *filter_stmt);
   StmtType type() const override{
     return StmtType::UPDATE;
   }
@@ -42,15 +42,15 @@ public:
 
 public:
   Table *table() const { return table_; }
-  const Field field() const { return field_; }
-  const Value value() const { return value_; }
+  const FieldMeta field() const { return field_; }
+  const Value *value() const { return value_; }
   FilterStmt *filter_stmt() const{
     return filter_stmt_;
   }
 
 private:
   Table *table_        = nullptr;
-  Field field_;
-  Value value_;
+  FieldMeta field_;
+  Value *value_ = nullptr;
   FilterStmt *filter_stmt_ = nullptr;
 };
