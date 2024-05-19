@@ -175,6 +175,14 @@ public:
   
   RC recover_insert_record(const char *data, const RID &rid);
 
+ /**
+   * @brief 更新指定位置的记录
+   *
+   * @param rid    要更新的记录标识
+   * @param offset 记录中的偏移量
+   * @param len    记录的长度
+   * @param value  记录的新值
+   */
   RC update_record(RID *rid, int offset, int len, Value &value);
   /**
    * @brief 删除指定的记录
@@ -278,6 +286,14 @@ public:
    */
   RC insert_record(const char *data, int record_size, RID *rid);
 
+ /**
+   * @brief 更新指定文件中指定位置的记录
+   *
+   * @param rid    要更新的记录标识
+   * @param offset 记录中的偏移量
+   * @param len    记录的长度
+   * @param value  记录的新值
+   */
   RC update_record(RID *rid, int offset, int len, Value &value);
 
   /**

@@ -146,7 +146,26 @@ RC MvccTrx::insert_record(Table *table, Record &record)
   return rc;
 }
 RC MvccTrx::update_record(Table *table, Record &record,int offset,int len,Value &value) {
-  return RC::INVALID_ARGUMENT;
+  Field begin_field;
+  Field end_field;
+  trx_fields(table, begin_field, end_field);
+
+  int32_t end_xid = end_field.get_int(record);
+  ASSERT(end_xid > 0, "concurrency conflict: other transaction is updating this record. end_xid=%d, current trx id=%d, rid=%s",
+         end_xid, trx_id_, record.rid().to_string().c_str());
+  if (end_xid != trx_kit_.max_trx_id()) {
+    // 当前不是多版本数据中的最新记录，不需要更新
+    return RC::SUCCESS;
+  }
+
+  end_field.set_int(record, -trx_id_);
+  RC rc = log_manager_->append_log(CLogType::UPDATE, trx_id_, table->table_id(), record.rid(), len, offset, value.data());
+  ASSERT(rc == RC::SUCCESS, "failed to append update record log. trx id=%d, table id=%d, rid=%s, offset=%d, len=%d, rc=%s",
+      trx_id_, table->table_id(), record.rid().to_string().c_str(), offset, len, strrc(rc));
+
+  operations_.insert(Operation(Operation::Type::UPDATE, table, record.rid()));
+
+  return RC::SUCCESS;
 }
 RC MvccTrx::delete_record(Table *table, Record &record)
 {
