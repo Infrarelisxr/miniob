@@ -73,5 +73,5 @@ RC UpdateStmt::create(Db *db, const UpdateSqlNode &update_sql, Stmt *&stmt)
   UpdateSqlNode updateSQL = const_cast<UpdateSqlNode&>(update_sql);
   //Field field = update_sql.conditions.
   stmt = new UpdateStmt(table, *field_meta, &(updateSQL.value), filter_stmt);
-  return rc;
+  return RC::SUCCESS;
 }

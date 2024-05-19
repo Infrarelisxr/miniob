@@ -18,8 +18,8 @@ public:
     }
 
     Table *table() const { return table_; }
-    const FieldMeta field() const { return field_; }
-    const Value value() const { return value_; }
+    FieldMeta& field() const { return field_; }
+    Value& value() const { return value_; }
 
 
 private:

@@ -7,9 +7,6 @@
 
 using namespace std;
 
-UpdatePhysicalOperator::UpdatePhysicalOperator(Table *table, Field field, Value value)
-    : table_(table), field_(field), value_(value)
-{}
 
 RC UpdatePhysicalOperator::open(Trx *trx)
 {
@@ -51,7 +48,7 @@ RC UpdatePhysicalOperator::next()
 
 
     //获取fieldmeta的偏移量及长度，确定更新的位置和范围
-    const char* field_name = field_.name();
+    //const char* field_name = field_.name();
 
     int offset_ = field_.offset();
     int len_ = field_.len();

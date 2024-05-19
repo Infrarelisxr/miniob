@@ -78,7 +78,7 @@ RC LogicalPlanGenerator::create(Stmt *stmt, unique_ptr<LogicalOperator> &logical
       UpdateStmt *update_stmt =  static_cast<UpdateStmt *>(stmt);
 
       rc                        = create_plan(update_stmt, logical_operator);
-    }
+    } break;
     default: {
       rc = RC::UNIMPLENMENT;
     }
@@ -247,30 +247,30 @@ RC LogicalPlanGenerator::create_plan(ExplainStmt *explain_stmt, unique_ptr<Logic
 RC LogicalPlanGenerator::create_plan(UpdateStmt *update_stmt, unique_ptr<LogicalOperator> &logical_operator)
 {
   Table *table = update_stmt->table();
+  FilterStmt *filter_stmt = update_stmt->filter_stmt();
 
-  //首先创建select和filter算子
   std::vector<Field> fields;
   auto temp_field = update_stmt->field();
-  fields.push_back(Field(table, &temp_field))
-  unique_ptr<LogicalOperator> table_get_oper(new TableGetLogicalOperator(table, fields, false));
+  fields.push_back(Field(table, &temp_field));
 
-  //过滤算子
+  unique_ptr<LogicalOperator> table_get_oper(new TableGetLogicalOperator(table, fields, false/*readonly*/));
+
   unique_ptr<LogicalOperator> predicate_oper;
-  FilterStmt *filter_stmt = update_stmt->filter_stmt();
   RC rc = create_plan(filter_stmt, predicate_oper);
-  if(rc != RC::SUCCESS){
+  if (rc != RC::SUCCESS) {
     return rc;
   }
 
   unique_ptr<LogicalOperator> update_oper(new UpdateLogicalOperator(table, update_stmt->field(), *(update_stmt->value())));
 
-  if(predicate_oper){
+  if (predicate_oper) {
     predicate_oper->add_child(std::move(table_get_oper));
     update_oper->add_child(std::move(predicate_oper));
-  }else{
+  } else {
     update_oper->add_child(std::move(table_get_oper));
   }
 
   logical_operator = std::move(update_oper);
+
   return rc;
 }

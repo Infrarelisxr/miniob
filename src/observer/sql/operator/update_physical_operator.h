@@ -11,7 +11,7 @@ class Trx;
 class UpdatePhysicalOperator : public PhysicalOperator
 {
 public:
-  UpdatePhysicalOperator(Table *table, FieldMeta field, Value value);
+  UpdatePhysicalOperator(Table *table, FieldMeta& field, Value& value): table_(table), field_(field), value_(value) {}
 
   virtual ~UpdatePhysicalOperator() = default;
 
