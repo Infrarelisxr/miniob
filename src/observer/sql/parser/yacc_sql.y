@@ -439,20 +439,29 @@ update_stmt:      /*  update 语句的语法解析树*/
     }
     ;
 join_list:
-    INNER JOIN ID ON condition
+    /* empty */
+    {
+      $$ = nullptr;
+    }
+    | INNER join_list
+    {
+      $$ = $2;
+      
+    }
+    | INNER JOIN ID ON condition_list join_list
     {
       $$ = new JoinSqlNode;
       $$->relations.push_back($3);
-      $$->conditions.emplace_back(*$5);
-    }
-    | INNER JOIN ID ON condition join_list
-    {
+      if($5 != nullptr) {
+        $$->conditions.swap(*$5);
+        delete $5;
+      }
       if($6 != nullptr)
       {
-        $$ = $6;
+        $$->relations.insert($$->relations.end(), $6->relations.begin(), $6->relations.end());
+        $$->conditions.insert($$->conditions.end(), $6->conditions.begin(), $6->conditions.end());
+        delete $6;
       }
-      $$->relations.push_back($3);
-      $$->conditions.emplace_back(*$5);
     }
     ;
 select_stmt:        /*  select 语句的语法解析树*/
