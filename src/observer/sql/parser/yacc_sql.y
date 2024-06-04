@@ -92,6 +92,8 @@ ArithmeticExpr *create_arithmetic_expression(ArithmeticExpr::Type type,
         WHERE
         AND
         SET
+        JOIN
+        INNER
         ON
         LOAD
         DATA
@@ -120,6 +122,7 @@ ArithmeticExpr *create_arithmetic_expression(ArithmeticExpr::Type type,
   std::vector<ConditionSqlNode> *   condition_list;
   std::vector<RelAttrSqlNode> *     rel_attr_list;
   std::vector<std::string> *        relation_list;
+  std::vector<JoinSqlNode> *        join_list;
   char *                            string;
   int                               number;                             
   float                             floats;
@@ -434,8 +437,25 @@ update_stmt:      /*  update 语句的语法解析树*/
       free($4);
     }
     ;
+join_list:
+    INNER JOIN ID ON condition
+    {
+      $$ = new JoinSqlNode;
+      $$->relations.push_back($3);
+      $$->conditions.emplace_back(*$5);
+    }
+    | INNER JOIN ID ON condition join_list
+    {
+      if($6 != nullptr)
+      {
+        $$ = $6;
+      }
+      $$->relations.push_back($3);
+      $$->conditions.emplace_back(*$5);
+    }
+    ;
 select_stmt:        /*  select 语句的语法解析树*/
-    SELECT select_attr FROM ID rel_list where
+    SELECT select_attr FROM ID rel_list join_list where
     {
       $$ = new ParsedSqlNode(SCF_SELECT);
       if ($2 != nullptr) {
@@ -449,11 +469,17 @@ select_stmt:        /*  select 语句的语法解析树*/
       $$->selection.relations.push_back($4);
       std::reverse($$->selection.relations.begin(), $$->selection.relations.end());
 
-      if ($6 != nullptr) {
-        $$->selection.conditions.swap(*$6);
-        delete $6;
+      if ($7 != nullptr) {
+        $$->selection.conditions.swap(*$7);
+        delete $7;
       }
       free($4);
+
+      if($6 != nullptr) {
+        $$->selection.relations.insert($$->selection.relations.end(), $6->relations.begin(), $6->relations.end());
+        $$->selection.conditions.insert($$->selection.conditions.end(), $6->conditions.begin(), $6->conditions.end());
+        delete $6;
+      }
     }
     ;
 calc_stmt:

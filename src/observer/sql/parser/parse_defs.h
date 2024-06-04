@@ -45,6 +45,9 @@ enum AggrOp
   AGGR_NONE
 };
 
+
+
+
 struct RelAttrSqlNode
 {
   std::string relation_name;   ///< relation name (may be NULL) 表名
@@ -90,6 +93,13 @@ struct ConditionSqlNode
   RelAttrSqlNode right_attr;     ///< right-hand side attribute if right_is_attr = TRUE 右边的属性
   Value          right_value;    ///< right-hand side value if right_is_attr = FALSE
 };
+
+struct JoinSqlNode
+{
+  std::vector<std::string>  relations;
+  std::vector<ConditionSqlNode> conditions;
+};
+
 
 /**
  * @brief 描述一个select语句

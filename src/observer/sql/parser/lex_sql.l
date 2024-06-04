@@ -90,6 +90,8 @@ DROP                                    RETURN_TOKEN(DROP);
 TABLE                                   RETURN_TOKEN(TABLE);
 TABLES                                  RETURN_TOKEN(TABLES);
 INDEX                                   RETURN_TOKEN(INDEX);
+JOIN                                    RETURN_TOKEN(JOIN);
+INNER                                   RETURN_TOKEN(INNER);
 ON                                      RETURN_TOKEN(ON);
 SHOW                                    RETURN_TOKEN(SHOW);
 SYNC                                    RETURN_TOKEN(SYNC);
@@ -133,6 +135,7 @@ EXPLAIN                                 RETURN_TOKEN(EXPLAIN);
 "<"                                     RETURN_TOKEN(LT);
 ">="                                    RETURN_TOKEN(GE);
 ">"                                     RETURN_TOKEN(GT);
+"."                                     RETURN_TOKEN(DOT);
 
 "+" |
 "-" |
