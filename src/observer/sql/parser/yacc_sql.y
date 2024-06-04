@@ -113,6 +113,7 @@ ArithmeticExpr *create_arithmetic_expression(ArithmeticExpr::Type type,
   Value *                           value;
   enum CompOp                       comp;
   enum AggrOp                       aggr;
+  JoinSqlNode *                     join_list;
   RelAttrSqlNode *                  rel_attr;
   std::vector<AttrInfoSqlNode> *    attr_infos;
   AttrInfoSqlNode *                 attr_info;
@@ -153,6 +154,7 @@ ArithmeticExpr *create_arithmetic_expression(ArithmeticExpr::Type type,
 %type <rel_attr_list>       select_attr
 %type <relation_list>       rel_list
 %type <rel_attr_list>       attr_list
+%type <join_list>           join_list
 %type <expression>          expression
 %type <expression_list>     expression_list
 %type <sql_node>            calc_stmt

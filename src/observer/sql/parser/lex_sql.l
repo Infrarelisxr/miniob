@@ -135,7 +135,7 @@ EXPLAIN                                 RETURN_TOKEN(EXPLAIN);
 "<"                                     RETURN_TOKEN(LT);
 ">="                                    RETURN_TOKEN(GE);
 ">"                                     RETURN_TOKEN(GT);
-"."                                     RETURN_TOKEN(DOT);
+
 
 "+" |
 "-" |
